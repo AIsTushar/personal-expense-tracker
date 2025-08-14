@@ -10,26 +10,7 @@ const register = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: isok ? 201 : 400,
     success: isok,
-    message: isok
-      ? "Registration Successfull please verify your email!"
-      : "Registration Failed",
-    data: isok ? result : [],
-  });
-});
-
-const verifyEmail = catchAsync(async (req, res) => {
-  const { token, email } = req.body;
-
-  const result = await AuthServices.verifyEmail(email, token);
-
-  const isok = result ? true : false;
-
-  sendResponse(res, {
-    statusCode: isok ? 200 : 400,
-    success: isok,
-    message: isok
-      ? "Email Verification Successfull"
-      : "Email Verification Failed",
+    message: isok ? "You have registered successfully!" : "Registration Failed",
     data: isok ? result : [],
   });
 });
@@ -42,37 +23,7 @@ const login = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: isok ? 200 : 400,
     success: isok,
-    message: isok ? "Login Successfull" : "Login Failed",
-    data: isok ? result : [],
-  });
-});
-
-const forgotPassword = catchAsync(async (req, res) => {
-  const { email } = req.body;
-  const result = await AuthServices.forgotPassword(email);
-  const isok = result ? true : false;
-
-  sendResponse(res, {
-    statusCode: isok ? 200 : 400,
-    success: isok,
-    message: isok
-      ? "Password Reset Link Sent To Your Email Successfully!"
-      : "Password Reset Link Sent To Your Email Failed",
-    data: isok ? result : [],
-  });
-});
-
-const resetPassword = catchAsync(async (req, res) => {
-  const token = req.params.token;
-  const { email, newPassword } = req.body;
-
-  const result = await AuthServices.resetPassword(email, token, newPassword);
-  const isok = result ? true : false;
-
-  sendResponse(res, {
-    statusCode: isok ? 200 : 400,
-    success: isok,
-    message: isok ? "Password Reset Successfull" : "Password Reset Failed",
+    message: isok ? "You have logged in successfully" : "Login Failed",
     data: isok ? result : [],
   });
 });
@@ -113,56 +64,9 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
-const resendVerifyEmail = catchAsync(async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    throw new ApiError(400, "Email is required");
-  }
-  const result = await AuthServices.resendVerifyEmail(email);
-  const isok = result ? true : false;
-  sendResponse(res, {
-    statusCode: isok ? 200 : 400,
-    success: isok,
-    message: isok
-      ? "Verification Email Sent Successfully!"
-      : "Verification Email Sending Failed",
-    data: isok ? result : [],
-  });
-});
-
-const makeAdmin = catchAsync(async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!email || !name || !password) {
-    throw new ApiError(400, "All fields is required! Please try again");
-  }
-  const result = await AuthServices.makeAdmin(req.body);
-  const isok = result ? true : false;
-  sendResponse(res, {
-    statusCode: isok ? 200 : 400,
-    success: isok,
-    message: isok ? "Admin Created Successfully!" : "Admin Creation Failed",
-
-    data: isok ? result : [],
-  });
-});
-
-const handleGoogleCallback = catchAsync(async (req, res) => {
-  const userData = req.user as any;
-
-  res.redirect(
-    `${process.env.FRONTEND_URL}/social-success?accessToken=${userData.accessToken}&refreshToken=${userData.refreshToken}`
-  );
-});
-
 export const AuthController = {
   register,
-  verifyEmail,
   login,
-  forgotPassword,
-  resetPassword,
   changePassword,
   refreshToken,
-  resendVerifyEmail,
-  makeAdmin,
-  handleGoogleCallback,
 };
