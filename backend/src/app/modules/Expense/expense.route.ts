@@ -15,6 +15,8 @@ router
   )
   .get(auth(), ExpenseControllers.getExpenses);
 
+router.get("/dashboard", auth(), ExpenseControllers.getDashboardData);
+
 router
   .route("/:id")
   .get(auth(), ExpenseControllers.getExpenseById)

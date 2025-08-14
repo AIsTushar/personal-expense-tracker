@@ -188,9 +188,31 @@ const refreshToken = async (refreshToken: string) => {
   return { accessToken };
 };
 
+const getUserInfo = async (req: any) => {
+  const userId = req.user.userId;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return user;
+};
+
 export const AuthServices = {
   register,
   login,
   changePassword,
   refreshToken,
+  getUserInfo,
 };

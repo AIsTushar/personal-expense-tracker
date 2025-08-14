@@ -53,10 +53,21 @@ const deleteExpense = catchAsync(async (req, res) => {
   });
 });
 
+const getDashboardData = catchAsync(async (req, res) => {
+  const result = await ExpenseServices.getDashboardData(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Dashboard data retrieved successfully",
+    data: result,
+  });
+});
+
 export const ExpenseControllers = {
   getExpenses,
   getExpenseById,
   updateExpense,
   deleteExpense,
   createExpense,
+  getDashboardData,
 };

@@ -64,9 +64,20 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
+const getUserInfo = catchAsync(async (req, res) => {
+  const result = await AuthServices.getUserInfo(req);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User Info Fetched Successfully",
+    data: result,
+  });
+});
+
 export const AuthController = {
   register,
   login,
   changePassword,
   refreshToken,
+  getUserInfo,
 };

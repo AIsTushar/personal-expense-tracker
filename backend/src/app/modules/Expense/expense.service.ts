@@ -110,10 +110,76 @@ const deleteExpense = async (req: Request) => {
   await prisma.expense.delete({ where: { id: req.params.id } });
 };
 
+const getDashboardData = async (req: Request) => {
+  const userId = req.user.userId;
+  const queryBuilder = new QueryBuilder(req.query, prisma.expense);
+  const results = await queryBuilder
+    .filter(expenseFilterFields)
+    .search(expenseSearchFields)
+    .nestedFilter(expenseNestedFilters)
+    .sort()
+    .paginate()
+    .include(expenseInclude)
+    .fields()
+    .rawFilter({
+      userId,
+    })
+    .filterByRange(expenseRangeFilter)
+    .execute();
+
+  // Total transactions
+  const totalTransactions = results.length;
+
+  // Total income and total expenses
+  const totalIncome = results
+    .filter((e: any) => e.type === "INCOME")
+    .reduce((sum: number, e: any) => sum + e.amount, 0);
+
+  const totalExpenses = results
+    .filter((e: any) => e.type === "EXPENSE")
+    .reduce((sum: number, e: any) => sum + e.amount, 0);
+
+  // Total balance
+  const totalBalance = totalIncome - totalExpenses;
+
+  // Pie chart data (expenses by category)
+  const categoryMap: Record<string, number> = {};
+  results
+    .filter((e: any) => e.type === "EXPENSE")
+    .forEach((e: any) => {
+      if (!categoryMap[e.category]) categoryMap[e.category] = 0;
+      categoryMap[e.category] += e.amount;
+    });
+
+  const expensesByCategory = Object.entries(categoryMap).map(
+    ([category, amount]) => ({
+      category,
+      amount,
+      percentage: totalExpenses
+        ? parseFloat(((amount / totalExpenses) * 100).toFixed(2))
+        : 0,
+    })
+  );
+
+  const meta = await queryBuilder.countTotal();
+
+  return {
+    summary: {
+      totalIncome,
+      totalExpenses,
+      totalBalance,
+      totalTransactions,
+    },
+    chart: expensesByCategory,
+    meta,
+  };
+};
+
 export const ExpenseServices = {
   getExpenses,
   getExpenseById,
   updateExpense,
   deleteExpense,
   createExpense,
+  getDashboardData,
 };
