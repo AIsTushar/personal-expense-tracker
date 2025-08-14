@@ -142,6 +142,28 @@ const getDashboardData = async (req: Request) => {
   // Total balance
   const totalBalance = totalIncome - totalExpenses;
 
+  // Month-wise income and expenses
+  const monthlyMap: Record<string, { income: number; expenses: number }> = {};
+
+  results.forEach((e: any) => {
+    const month = new Date(e.date).toLocaleString("default", {
+      month: "short",
+    });
+    if (!monthlyMap[month]) monthlyMap[month] = { income: 0, expenses: 0 };
+
+    if (e.type === "INCOME") monthlyMap[month].income += e.amount;
+    if (e.type === "EXPENSE") monthlyMap[month].expenses += e.amount;
+  });
+
+  const monthlyData = Object.entries(monthlyMap).map(
+    ([month, { income, expenses }]) => ({
+      month,
+      income,
+      expenses,
+      balance: income - expenses,
+    })
+  );
+
   // Pie chart data (expenses by category)
   const categoryMap: Record<string, number> = {};
   results
@@ -170,6 +192,7 @@ const getDashboardData = async (req: Request) => {
       totalBalance,
       totalTransactions,
     },
+    monthlyData,
     chart: expensesByCategory,
     meta,
   };
