@@ -1,11 +1,9 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import path from "path";
 import router from "./app/routes";
 import GlobalErrorHandler from "./app/middlewares/globalErrorHandler";
-import passport from "./config/passportSetup";
 
 const app: Application = express();
 
@@ -22,17 +20,14 @@ export const corsOptions = {
 
 // Middleware setup
 app.use(cors(corsOptions));
-app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(passport.initialize());
 
 // Route handler for the root endpoint
 app.get("/", (req: Request, res: Response) => {
   res.send({
-    message:
-      "Welcome to HomeHaven — Real Estate Listing & Booking Platform Project API",
+    message: "Welcome to Personal Expense Tracker Project API",
   });
 });
 

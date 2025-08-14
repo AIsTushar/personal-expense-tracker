@@ -8,6 +8,7 @@
     "build": "npm run generate && tsc",
     "generate": "npx prisma generate",
     "postinstall": "npm run generate",
+    "cModule": "node scripts/generateModule.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,6 +29,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "http-status": "^2.1.0",
     "zod": "^3.25.67"
   }
 }
