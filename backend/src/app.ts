@@ -11,6 +11,7 @@ export const corsOptions = {
   origin: [
     "http://localhost:3000",
     "https://expense-manager-frontend-86nam3iv5-azizul-tushars-projects.vercel.app",
+    "https://expense-manager-frontend-one.vercel.app",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: [

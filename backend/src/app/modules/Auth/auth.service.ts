@@ -41,10 +41,38 @@ const register = async (payload: IUser) => {
     select: {
       id: true,
       email: true,
+      name: true,
+      password: false, // Exclude password from the result
     },
   });
 
-  return result;
+  const JwtPayload = {
+    email: result.email,
+    userId: result.id,
+    role: "user",
+  };
+
+  const accessToken = createToken(
+    JwtPayload,
+    process.env.ACCESS_TOKEN_SECRET as string,
+    process.env.ACCESS_TOKEN_EXPIRES_IN as string
+  );
+
+  const refreshToken = createToken(
+    JwtPayload,
+    process.env.REFRESH_TOKEN_SECRET as string,
+    process.env.REFRESH_TOKEN_EXPIRES_IN as string
+  );
+
+  return {
+    user: {
+      id: result.id,
+      email: result.email,
+      name: result.name,
+    },
+    accessToken,
+    refreshToken,
+  };
 };
 
 const login = async (payload: ILoginUser) => {
