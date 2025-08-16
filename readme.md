@@ -4,7 +4,9 @@ A full-stack expense tracking application built with **Next.js**, **Express.js**
 
 ## 🚀 Live Demo
 
-- **Frontend:** [Personal Expense Manager](https://expense-manager-frontend-one.vercel.app)
+- **Frontend:** [Live Demo](https://expense-manager-frontend-one.vercel.app)
+- **Postman:** [API Documentation URL](https://documenter.getpostman.com/view/21536674/2sB3BHjTrY)
+- **Backend:** [Backend URL](https://personal-expense-tracker-backend-inky.vercel.app)
 
 ---
 
