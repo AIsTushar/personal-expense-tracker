@@ -6,10 +6,11 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { RootState } from "../store";
-import { logout, setAccessToken } from "../features/auth";
+// import { logout, setAccessToken } from "../features/auth";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1",
+  baseUrl: "https://personal-expense-tracker-backend-inky.vercel.app/api/v1",
+
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth?.accessToken;
     if (token) {
@@ -25,30 +26,28 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  let result = await baseQuery(args, api, extraOptions);
+  const result = await baseQuery(args, api, extraOptions);
 
-  if (result.error && result.error.status === 401) {
-    // Refresh access token
-    const refreshResult = await baseQuery(
-      {
-        url: "/auth/refresh-token",
-        method: "POST",
-      },
-      api,
-      extraOptions
-    );
+  // if (result.error && result.error.status === 401) {
+  //   // Refresh access token
+  //   const refreshResult = await baseQuery(
+  //     {
+  //       url: "/auth/refresh-token",
+  //       method: "POST",
+  //       // body:
+  //     },
+  //     api,
+  //     extraOptions
+  //   );
 
-    if (refreshResult.data) {
-      const newAccessToken = (refreshResult.data as any).accessToken;
+  //   if (refreshResult.data) {
+  //     const newAccessToken = (refreshResult.data as any).accessToken;
 
-      api.dispatch(setAccessToken(newAccessToken));
-
-      // Retry the original request
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      api.dispatch(logout());
-    }
-  }
+  //     api.dispatch(setAccessToken(newAccessToken));
+  //   } else {
+  //     api.dispatch(logout());
+  //   }
+  // }
 
   return result;
 };
@@ -56,7 +55,7 @@ const baseQueryWithReauth: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["auth", "roofing", "window"],
+  tagTypes: ["Auth", "Expenses"],
   endpoints: () => ({}),
 });
 

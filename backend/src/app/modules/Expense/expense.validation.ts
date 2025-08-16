@@ -15,12 +15,6 @@ const createExpenseSchema = z.object({
   date: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "Invalid date format",
   }),
-  type: z.enum(["INCOME", "EXPENSE"], {
-    required_error: "Type is required",
-  }),
-  method: z.enum(["CASH", "CHECK", "CARD", "OTHER"], {
-    required_error: "Method is required",
-  }),
 });
 
 const updateExpenseSchema = createExpenseSchema.partial();

@@ -20,26 +20,12 @@ model User {
   @@map("users")
 }
 
-enum Type {
-  INCOME
-  EXPENSE
-}
-
-enum Method {
-  CASH
-  CHECK
-  CARD
-  OTHER
-}
-
 model Expense {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   title    String
   amount   Float
   category String
   date     DateTime
-  type     Type
-  method   Method
 
   User   User?   @relation(fields: [userId], references: [id])
   userId String? @db.ObjectId

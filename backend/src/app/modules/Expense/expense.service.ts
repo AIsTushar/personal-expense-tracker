@@ -131,43 +131,39 @@ const getDashboardData = async (req: Request) => {
   const totalTransactions = results.length;
 
   // Total income and total expenses
-  const totalIncome = results
-    .filter((e: any) => e.type === "INCOME")
-    .reduce((sum: number, e: any) => sum + e.amount, 0);
+  // const totalIncome = results
+  //   .filter((e: any) => e.type === "INCOME")
+  //   .reduce((sum: number, e: any) => sum + e.amount, 0);
 
   const totalExpenses = results
     .filter((e: any) => e.type === "EXPENSE")
     .reduce((sum: number, e: any) => sum + e.amount, 0);
 
   // Total balance
-  const totalBalance = totalIncome - totalExpenses;
+  // const totalBalance = totalIncome - totalExpenses;
 
   // Month-wise income and expenses
-  const monthlyMap: Record<string, { income: number; expenses: number }> = {};
+  const monthlyMap: Record<string, { expenses: number }> = {};
 
   results.forEach((e: any) => {
     const month = new Date(e.date).toLocaleString("default", {
       month: "short",
     });
-    if (!monthlyMap[month]) monthlyMap[month] = { income: 0, expenses: 0 };
-
-    if (e.type === "INCOME") monthlyMap[month].income += e.amount;
-    if (e.type === "EXPENSE") monthlyMap[month].expenses += e.amount;
+    if (!monthlyMap[month]) monthlyMap[month] = { expenses: 0 };
+    if (e.type === "Expense") monthlyMap[month].expenses += e.amount;
   });
 
   const monthlyData = Object.entries(monthlyMap).map(
-    ([month, { income, expenses }]) => ({
+    ([month, { expenses }]) => ({
       month,
-      income,
       expenses,
-      balance: income - expenses,
     })
   );
 
   // Pie chart data (expenses by category)
   const categoryMap: Record<string, number> = {};
   results
-    .filter((e: any) => e.type === "EXPENSE")
+    .filter((e: any) => e.type === "Expense")
     .forEach((e: any) => {
       if (!categoryMap[e.category]) categoryMap[e.category] = 0;
       categoryMap[e.category] += e.amount;
@@ -187,9 +183,9 @@ const getDashboardData = async (req: Request) => {
 
   return {
     summary: {
-      totalIncome,
+      // totalIncome,
       totalExpenses,
-      totalBalance,
+      // totalBalance,
       totalTransactions,
     },
     monthlyData,

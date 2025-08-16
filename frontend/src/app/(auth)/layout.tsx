@@ -1,13 +1,18 @@
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+"use client";
+
+// import { Layout, Typography } from "antd";
+import { ReactNode } from "react";
+
+// const { Footer } = Layout;
+// const { Text, Link } = Typography;
+
+const layout = ({ children }: { children: ReactNode }) => {
   return (
-    <html lang="en">
-      <body>
-        <div className="container mx-auto">{children}</div>
-      </body>
-    </html>
+    <div className="">
+      <div className="overflow-y-auto">{children}</div>
+      
+    </div>
   );
-}
+};
+
+export default layout;

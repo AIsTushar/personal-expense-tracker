@@ -44,7 +44,18 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    getProfile: builder.query<AuthResponse, void>({
+      query: () => ({
+        url: "/auth/get-user-info",
+        method: "GET",
+        credentials: 'include', // This is crucial for sending cookies
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useGetProfileQuery, // Fixed the hook name
+} = authApi;
